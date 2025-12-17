@@ -4,3 +4,4 @@
 /node_modules
 /src/utils/firebase.js
 .firebase/
+.parcel-cache/
