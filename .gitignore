@@ -1,6 +1,6 @@
 
-/.parcel-cache
-/dist
+
+dist/
 /node_modules
 /src/utils/firebase.js
 .firebase/
