@@ -5,14 +5,16 @@ import JobForm from "./JobForm";
 
 export default function AddJob() {
   const { user } = useAuth();
+  //   console.log(user);
+  const userId = user.uid;
   const nav = useNavigate();
-  async function submit(data) {
+  async function submit(JobData) {
     const payload = {
-      ...data,
+      ...JobData,
       userId: user.uid,
       createdAt: new Date().toISOString(),
     };
-    await addJob(payload);
+    await addJob(userId, payload);
     nav("/jobs");
   }
   return (

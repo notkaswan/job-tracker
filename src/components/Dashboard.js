@@ -4,15 +4,22 @@ import { getJobsForUser } from "../utils/jobs";
 import { Link } from "react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { JobCard } from "../utils/JobCard";
+import { onAuthStateChanged } from "firebase/auth";
+import auth from "../utils/auth";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f7f", "#a29bfe"];
 export default function Dashboard() {
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
-    if (!user) return;
-    getJobsForUser(user.uid).then(setJobs);
-  }, [user]);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userJobs = await getJobsForUser(user.uid);
+        setJobs(userJobs);
+      }
+    });
+    setLoading(false);
+  }, []);
   const counts = jobs.reduce((acc, j) => {
     acc[j.status] = (acc[j.status] || 0) + 1;
     return acc;
@@ -22,6 +29,8 @@ export default function Dashboard() {
     value: counts[k],
     color: COLORS[i % COLORS.length],
   }));
+
+  if (loading) return <p>Loading...</p>;
   return (
     <div>
       <div className="flex justify-between items-center mb-6">

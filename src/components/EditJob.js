@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { getJob, updateJob } from "../utils/jobs";
+// import { getJob, updateJob } from "../utils/jobs";
 import JobForm from "./JobForm";
 
 export default function EditJob() {
@@ -8,10 +8,10 @@ export default function EditJob() {
   const [job, setJob] = useState(null);
   const nav = useNavigate();
   useEffect(() => {
-    getJob(id).then(setJob);
+    // getJob(id).then(setJob);
   }, [id]);
   async function submit(data) {
-    await updateJob(id, data);
+    // await updateJob(id, data);
     nav("/jobs");
   }
   if (!job) return <div>Loading...</div>;

@@ -26,6 +26,9 @@ export const Navbar = () => {
               <Link to="/" className="px-3 py-1">
                 Dashboard
               </Link>
+              <Link to="/profile" className="px-3 py-1">
+                Profile
+              </Link>
               <button onClick={handleLogout} className="px-3 p-1">
                 Logout
               </button>
