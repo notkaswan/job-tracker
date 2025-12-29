@@ -23,7 +23,7 @@ export const JobCard = ({ job }) => {
         </div>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <Link to={"/jobs/${job.id}/edit"} className="text-sm">
+        <Link to={"/jobs/" + job.id + "/edit"} className="text-sm">
           Edit
         </Link>
         <button onClick={handleDelete} className="text-sm text-red-600">
