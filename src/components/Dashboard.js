@@ -17,8 +17,9 @@ export default function Dashboard() {
         const userJobs = await getJobsForUser(user.uid);
         setJobs(userJobs);
       }
+      setLoading(false);
     });
-    setLoading(false);
+    return () => unsubscribe();
   }, []);
   const counts = jobs.reduce((acc, j) => {
     acc[j.status] = (acc[j.status] || 0) + 1;

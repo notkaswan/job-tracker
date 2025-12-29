@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router";
+import { deleteJob } from "./jobs";
+import auth from "./auth";
 
-export const JobCard = ({ job, onDelete }) => {
+export const JobCard = ({ job }) => {
+  const handleDelete = async () => {
+    const userId = auth.currentUser.uid;
+
+    if (window.confirm("Delete job?")) await deleteJob(userId, job.id);
+  };
   return (
     <div className="bg-white p-4 rounded shadow flex justify-between items-start">
       <div>
@@ -19,10 +26,7 @@ export const JobCard = ({ job, onDelete }) => {
         <Link to={"/jobs/${job.id}/edit"} className="text-sm">
           Edit
         </Link>
-        <button
-          onClick={() => onDelete(job.id)}
-          className="text-sm text-red-600"
-        >
+        <button onClick={handleDelete} className="text-sm text-red-600">
           Delete
         </button>
       </div>

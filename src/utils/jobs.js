@@ -30,9 +30,9 @@ export async function addJob(userId, jobData) {
 //   await updateDoc(ref, data);
 // }
 
-// export async function deleteJob(id) {
-//   await deleteDoc(doc(db, "jobs", id));
-// }
+export async function deleteJob(userId, jobId) {
+  await deleteDoc(doc(db, "users", userId, "jobs", jobId));
+}
 
 // export async function getJob(id) {
 //   const snap = await getDoc(doc(db, "users", id, "jobs"));
@@ -42,7 +42,6 @@ export async function addJob(userId, jobData) {
 export async function getJobsForUser(userId) {
   const jobsRef = collection(db, "users", userId, "jobs");
   const snapshot = await getDocs(jobsRef);
-  //   console.log(userId);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),

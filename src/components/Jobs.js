@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/AuthContext";
-// import { deleteJob, getJobsForUser } from "../utils/jobs";
+import { deleteJob, getJobsForUser } from "../utils/jobs";
 import { JobCard } from "../utils/JobCard";
+import { onAuthStateChanged } from "firebase/auth";
+import auth from "../utils/auth";
 
 export const Jobs = () => {
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const userId = auth.currentUser.uid;
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
-    // if (!user) return getJobsForUser(user.uid).then(setJobs);
-  }, [user]);
-  async function handleDelete(id) {
-    // if (!confirm("Delete job?")) return await deleteJob(id);
-    setJobs((prev) => prev.filter((j) => j.id !== id));
-  }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userJobs = await getJobsForUser(user.uid);
+        setJobs(userJobs);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -20,7 +28,7 @@ export const Jobs = () => {
       </div>
       <div className="space-y-3">
         {jobs.map((j) => (
-          <JobCard key={j.id} job={j} onDelete={handleDelete} />
+          <JobCard key={j.id} job={j} />
         ))}
       </div>
     </div>
