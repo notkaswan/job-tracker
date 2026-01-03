@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 export default function JobForm({ initial = {}, onSubmit }) {
+  const date = new Date();
+  const getTodayDate = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  )
+    .toISOString()
+    .split("T")[0];
   const [form, setForm] = useState({
     company: initial.company || "",
     title: initial.title || "",
     jobType: initial.jobType || "Full-time",
     location: initial.location || "",
-    appliedDate: initial.appliedDate || "",
+    appliedDate: initial.appliedDate || getTodayDate,
     status: initial.status || "Applied",
     notes: initial.notes || "",
   });
+
   function change(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
@@ -83,6 +90,7 @@ export default function JobForm({ initial = {}, onSubmit }) {
           name="appliedDate"
           value={form.appliedDate}
           onChange={change}
+          max={getTodayDate}
           className="w-full border p-2 rounded"
         />
       </div>
