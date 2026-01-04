@@ -30,6 +30,14 @@ export async function updateJob(userId, jobId, data) {
   await updateDoc(ref, data);
 }
 
+export async function updateJobStatus(userId, jobId, newStatus) {
+  const ref = doc(db, "users", userId, "jobs", jobId);
+  await updateDoc(ref, {
+    status: newStatus,
+  });
+  console.log("001100");
+}
+
 export async function deleteJob(userId, jobId) {
   await deleteDoc(doc(db, "users", userId, "jobs", jobId));
 }
