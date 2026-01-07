@@ -12,6 +12,7 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f7f", "#a29bfe"];
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
