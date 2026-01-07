@@ -4,6 +4,7 @@ import { deleteJob, getJobsForUser, subscribeToJobs } from "../utils/jobs";
 import { JobCard } from "../utils/JobCard";
 import { onAuthStateChanged } from "firebase/auth";
 import auth from "../utils/auth";
+import { sortJobs } from "../utils/sortJobs";
 
 export const Jobs = () => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ export const Jobs = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userJobs = await getJobsForUser(user.uid);
-        setJobs(userJobs);
+        setJobs(sortJobs(userJobs));
       }
       setLoading(false);
     });
@@ -25,7 +26,7 @@ export const Jobs = () => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         unsubscribeJobs = subscribeToJobs(user.uid, (jobs) => {
-          setJobs(jobs);
+          setJobs(sortJobs(jobs));
         });
       }
     });
