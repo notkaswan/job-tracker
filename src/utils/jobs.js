@@ -8,6 +8,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -15,7 +16,6 @@ import {
   where,
 } from "firebase/firestore";
 const db = getFirestore(app);
-// const jobsCol = collection(db, "users", userId, "jobs");
 
 export async function addJob(userId, jobData) {
   const docRef = await addDoc(collection(db, "users", userId, "jobs"), {
@@ -55,3 +55,16 @@ export async function getJobsForUser(userId) {
     ...doc.data(),
   }));
 }
+
+export const subscribeToJobs = (userId, callback) => {
+  const jobsRef = collection(db, "users", userId, "jobs");
+
+  const unsubscribe = onSnapshot(jobsRef, (snapshot) => {
+    const jobs = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(jobs);
+  });
+  return unsubscribe;
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/AuthContext";
-import { deleteJob, getJobsForUser } from "../utils/jobs";
+import { deleteJob, getJobsForUser, subscribeToJobs } from "../utils/jobs";
 import { JobCard } from "../utils/JobCard";
 import { onAuthStateChanged } from "firebase/auth";
 import auth from "../utils/auth";
@@ -18,6 +18,22 @@ export const Jobs = () => {
       setLoading(false);
     });
     return () => unsubscribe();
+  }, []);
+  useEffect(() => {
+    let unsubscribeJobs = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        unsubscribeJobs = subscribeToJobs(user.uid, (jobs) => {
+          setJobs(jobs);
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeJobs) unsubscribeJobs();
+    };
   }, []);
 
   if (loading) return <p>Loading...</p>;

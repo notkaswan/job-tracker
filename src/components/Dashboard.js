@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../utils/AuthContext";
-import { getJobsForUser } from "../utils/jobs";
+import { getJobsForUser, subscribeToJobs } from "../utils/jobs";
 import { Link } from "react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { JobCard } from "../utils/JobCard";
@@ -20,6 +20,22 @@ export default function Dashboard() {
       setLoading(false);
     });
     return () => unsubscribe();
+  }, []);
+  useEffect(() => {
+    let unsubscribeJobs = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        unsubscribeJobs = subscribeToJobs(user.uid, (jobs) => {
+          setJobs(jobs);
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeJobs) unsubscribeJobs();
+    };
   }, []);
   const counts = jobs.reduce((acc, j) => {
     acc[j.status] = (acc[j.status] || 0) + 1;
