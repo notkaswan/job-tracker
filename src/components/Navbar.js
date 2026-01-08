@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../utils/AuthContext";
 import { logout } from "../utils/auth";
+import DarkModeToggle from "../utils/DarkModeToggle";
 
 export const Navbar = () => {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ export const Navbar = () => {
           Job Tracker
         </Link>
         <div className="space-x-4">
+          {/* <DarkModeToggle /> */}
           {user ? (
             <>
               <Link to="/jobs" className="px-3 py-1">
